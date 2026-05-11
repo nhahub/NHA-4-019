@@ -1,0 +1,28 @@
+-- تفعيل TimescaleDB extension
+CREATE EXTENSION IF NOT EXISTS timescaledb;
+
+-- جدول الرحلات مع الـ prediction
+CREATE TABLE flight_predictions (
+    time        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    callsign    TEXT,
+    origin_country TEXT,
+    flight_lat  DOUBLE PRECISION,
+    flight_lon  DOUBLE PRECISION,
+    on_ground   BOOLEAN,
+    temperature DOUBLE PRECISION,
+    wind_speed  DOUBLE PRECISION,
+    is_delayed  INTEGER,
+    status      TEXT
+);
+
+-- تحويله لـ hypertable عشان يبقى TimescaleDB
+SELECT create_hypertable('flight_predictions', 'time');
+
+
+
+
+
+
+#-------------------------------------------------------------------
+# connect to timescale from docker 
+docker exec -it timescaledb psql -U admin -d flights_db

@@ -1,0 +1,110 @@
+-- إنشاء الـ Database
+CREATE DATABASE IF NOT EXISTS NYC_FLIGHTS_DW;
+USE DATABASE NYC_FLIGHTS_DW;
+USE SCHEMA PUBLIC;
+
+-- DIM_DATE
+CREATE OR REPLACE TABLE DIM_DATE (
+    date_key        BIGINT,
+    full_date       DATE,
+    day             INT,
+    day_name        STRING,
+    week_of_year    INT,
+    month           INT,
+    month_name      STRING,
+    quarter         INT,
+    year            INT,
+    is_weekend      INT,
+    season          STRING,
+    holiday_flag    INT
+);
+
+-- DIM_TIME
+CREATE OR REPLACE TABLE DIM_TIME (
+    time_key        BIGINT,
+    time_label      STRING,
+    hour            INT,
+    minute          INT,
+    part_of_day     STRING,
+    time_slot_1h    STRING,
+    time_slot_3h    STRING,
+    peak_hour_flag  INT
+);
+
+-- DIM_AIRPORT
+CREATE OR REPLACE TABLE DIM_AIRPORT (
+    airport_key     BIGINT,
+    iata_code       STRING,
+    airport_name    STRING,
+    city            STRING,
+    state           STRING,
+    country         STRING,
+    latitude_deg    FLOAT,
+    longitude_deg   FLOAT,
+    elevation_ft    INT,
+    airport_type    STRING
+);
+
+-- DIM_CARRIER
+CREATE OR REPLACE TABLE DIM_CARRIER (
+    carrier_key     BIGINT,
+    carrier_code    STRING,
+    carrier_name    STRING
+);
+
+-- DIM_WEATHER_CONDITION
+CREATE OR REPLACE TABLE DIM_WEATHER_CONDITION (
+    weather_condition_key   BIGINT,
+    weather_main            STRING,
+    weather_description     STRING,
+    precipitation_type      STRING,
+    severity_level          STRING
+);
+
+-- FACT_FLIGHT_DELAY
+CREATE OR REPLACE TABLE FACT_FLIGHT_DELAY (
+    flight_delay_key                BIGINT,
+    date_key                        BIGINT,
+    time_key                        BIGINT,
+    origin_airport_key              BIGINT,
+    dest_airport_key                BIGINT,
+    carrier_key                     BIGINT,
+    flight_number                   STRING,
+    fl_date                         DATE,
+    dep_delay_minutes               FLOAT,
+    arr_delay_minutes               FLOAT,
+    carrier_delay_minutes           FLOAT,
+    weather_delay_minutes           FLOAT,
+    nas_delay_minutes               FLOAT,
+    security_delay_minutes          FLOAT,
+    late_aircraft_delay_minutes     FLOAT,
+    scheduled_elapsed_time          FLOAT,
+    actual_elapsed_time             FLOAT,
+    air_time                        FLOAT,
+    distance                        FLOAT,
+    cancelled_flag                  INT,
+    diverted_flag                   INT,
+    is_dep_delayed_flag             INT,
+    is_arr_delayed_flag             INT,
+    is_weather_related_flag         INT,
+    delay_bucket                    STRING
+);
+
+-- FACT_WEATHER_OBSERVATION
+CREATE OR REPLACE TABLE FACT_WEATHER_OBSERVATION (
+    weather_observation_key BIGINT,
+    date_key                BIGINT,
+    time_key                BIGINT,
+    airport_key             BIGINT,
+    weather_condition_key   BIGINT,
+    temperature             FLOAT,
+    humidity                FLOAT,
+    precipitation           FLOAT,
+    snow                    FLOAT,
+    wind_speed              FLOAT,
+    wind_direction          FLOAT,
+    visibility              FLOAT,
+    pressure                FLOAT,
+    cloudcover              FLOAT,
+    weather_severity_score  FLOAT
+);
